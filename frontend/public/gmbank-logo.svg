@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="GMbank logo">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#e8c97a"/>
+      <stop offset="100%" stop-color="#c9a84c"/>
+    </linearGradient>
+  </defs>
+  <rect x="14" y="14" width="228" height="228" rx="56" fill="url(#g)"/>
+  <path d="M57 89 128 55l71 34v11H57V89Zm9 21h18v58H66v-58Zm35 0h18v58h-18v-58Zm35 0h18v58h-18v-58Zm35 0h18v58h-18v-58Zm-114 67h142v17H57v-17Z" fill="#0a0e1a"/>
+  <text x="128" y="222" text-anchor="middle" font-size="30" font-family="Georgia, serif" font-weight="700" fill="#0a0e1a">GM</text>
+</svg>

@@ -430,7 +430,7 @@ export default function CreateAccount() {
                 >
                   <i className="fas fa-circle-info" style={{ color: 'var(--gold)', marginTop: 2 }} />
                   <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.65 }}>
-                    All NexusBank accounts are FDIC-insured up to ₹5 lakh. No monthly maintenance fees for the first
+                    All GMbank accounts are FDIC-insured up to ₹5 lakh. No monthly maintenance fees for the first
                     year.
                   </p>
                 </div>
@@ -614,7 +614,7 @@ export default function CreateAccount() {
                 >
                   <i className="fas fa-shield-halved" style={{ color: '#10b981', marginTop: 2 }} />
                   <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', margin: 0 }}>
-                    By confirming, you agree to NexusBank's account terms. Account creation is immediate and your
+                    By confirming, you agree to GMbank's account terms. Account creation is immediate and your
                     funds are FDIC insured.
                   </p>
                 </div>
@@ -643,3 +643,4 @@ export default function CreateAccount() {
     </Layout>
   )
 }
+

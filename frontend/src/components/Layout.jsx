@@ -143,22 +143,8 @@ export default function Layout({ children }) {
             className="brand-text"
             style={{ fontSize: '1.35rem', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
           >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                background: 'linear-gradient(135deg, #c9a84c, #e8c97a)',
-                borderRadius: 9,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#0a0e1a',
-                fontSize: '0.95rem',
-              }}
-            >
-              <i className="fas fa-landmark" />
-            </div>
-            NexusBank
+            <img src="/gmbank-logo.svg" alt="GMbank" style={{ width: 36, height: 36, borderRadius: 9 }} />
+            GMbank
           </a>
         </div>
 

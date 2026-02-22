@@ -112,8 +112,9 @@ function Login() {
         style={{ width: '100%', maxWidth: 560, padding: 32, position: 'relative', zIndex: 1 }}
       >
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div className="brand-text" style={{ fontSize: '1.8rem', marginBottom: 8 }}>
-            NexusBank
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <img src="/gmbank-logo.svg" alt="GMbank" style={{ width: 36, height: 36, borderRadius: 9 }} />
+            <div className="brand-text" style={{ fontSize: '1.8rem' }}>GMbank</div>
           </div>
           <p style={{ color: 'var(--text-muted)', margin: 0 }}>Private Banking Access</p>
         </div>
