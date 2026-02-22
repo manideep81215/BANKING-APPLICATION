@@ -294,13 +294,9 @@ export default function Users() {
       const [res, reqRes] = await Promise.all([getAllUsers(), getPendingAccountRequests()])
       setUsers(res.data || [])
       setPendingRequests(reqRes.data || [])
-    } catch {
-      toast('Showing demo user data.', 'info')
-      setUsers([
-        { id: 1, name: 'John Smith', email: 'john@example.com', number: 9876543210, role: 'ADMIN' },
-        { id: 2, name: 'Emily Clarke', email: 'emily@example.com', number: 8765432100, role: 'USER' },
-        { id: 3, name: 'Raj Patel', email: 'raj@example.com', number: 7654321000, role: 'USER' },
-      ])
+    } catch (err) {
+      toast(err?.response?.data || 'Could not load users. Please login again.', 'error')
+      setUsers([])
       setPendingRequests([])
     } finally {
       setLoading(false)
