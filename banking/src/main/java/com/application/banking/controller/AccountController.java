@@ -6,6 +6,7 @@ import com.application.banking.dto.DepositRequest;
 import com.application.banking.dto.WithdrawRequest;
 import com.application.banking.dto.TransferRequest; // Import TransferRequest
 import com.application.banking.model.Account;
+import com.application.banking.model.User;
 import com.application.banking.service.AccountService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -98,11 +99,9 @@ public class AccountController {
         }
 
         // Enforce requester ownership and pending review status.
-        var requester = userRepository.findById(effectiveUserId);
-        if (requester.isEmpty()) {
-            return new ResponseEntity<>("User not found.", HttpStatus.NOT_FOUND);
-        }
-        account.setUser(requester.get());
+        User requester = new User();
+        requester.setId(effectiveUserId);
+        account.setUser(requester);
         account.setStatus(Account.AccountStatus.PENDING);
 
         try {
