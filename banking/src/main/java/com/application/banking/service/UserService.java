@@ -20,12 +20,26 @@ public class UserService {
         return value != null && (value.startsWith("$2a$") || value.startsWith("$2b$") || value.startsWith("$2y$"));
     }
 
+    private String normalizeAndValidateAadhar(String aadharCard) {
+        if (aadharCard == null) {
+            return null;
+        }
+        String normalized = aadharCard.replaceAll("\\s+", "");
+        if (!normalized.matches("\\d{12}")) {
+            throw new IllegalArgumentException("Aadhaar card must be exactly 12 digits.");
+        }
+        return normalized;
+    }
+
     public User createUser(User user) {
         if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password is required.");
         }
         if (!looksLikeBcryptHash(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if (user.getAadharCard() != null && !user.getAadharCard().isBlank()) {
+            user.setAadharCard(normalizeAndValidateAadhar(user.getAadharCard()));
         }
         return userRepository.save(user);
     }
@@ -58,6 +72,9 @@ public class UserService {
             if (userDetails.getRole() != null) {
                 existingUser.setRole(userDetails.getRole());
             }
+            if (userDetails.getAadharCard() != null && !userDetails.getAadharCard().isBlank()) {
+                existingUser.setAadharCard(normalizeAndValidateAadhar(userDetails.getAadharCard()));
+            }
             if (userDetails.getPassword() != null && !userDetails.getPassword().isBlank()) {
                 if (looksLikeBcryptHash(userDetails.getPassword())) {
                     existingUser.setPassword(userDetails.getPassword());
@@ -78,5 +95,13 @@ public class UserService {
             throw new RuntimeException("User not found with id " + id);
         }
         userRepository.deleteById(id);
+    }
+
+    public void updateAadharCard(Long id, String aadharCard) {
+        String normalized = normalizeAndValidateAadhar(aadharCard);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+        user.setAadharCard(normalized);
+        userRepository.save(user);
     }
 }

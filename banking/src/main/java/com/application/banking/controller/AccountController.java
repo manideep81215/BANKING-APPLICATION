@@ -8,6 +8,7 @@ import com.application.banking.dto.TransferRequest; // Import TransferRequest
 import com.application.banking.model.Account;
 import com.application.banking.model.User;
 import com.application.banking.service.AccountService;
+import com.application.banking.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class AccountController {
 
     private final AccountService accountService;
+    private final UserService userService;
 
     private Long resolveEffectiveUserId(HttpSession session) {
         Object sessionUserIdAttr = session.getAttribute("userId");
@@ -54,6 +56,13 @@ public class AccountController {
                 && userId.equals(account.get().getUser().getId());
     }
 
+    private String extractAadharFromRequest(Account account) {
+        if (account == null || account.getUser() == null) {
+            return null;
+        }
+        return account.getUser().getAadharCard();
+    }
+
     @PostMapping
     public ResponseEntity<?> createAccount(
             @RequestBody Account account,
@@ -69,8 +78,16 @@ public class AccountController {
         if (!isPrivilegedRole(sessionRole)) {
             return new ResponseEntity<>("Only admin or manager can create accounts.", HttpStatus.FORBIDDEN);
         }
+        if (account.getUser() == null || account.getUser().getId() == null) {
+            return new ResponseEntity<>("User id is required.", HttpStatus.BAD_REQUEST);
+        }
+        String aadharCard = extractAadharFromRequest(account);
+        if (aadharCard == null || aadharCard.isBlank()) {
+            return new ResponseEntity<>("Aadhaar card is required.", HttpStatus.BAD_REQUEST);
+        }
 
         try {
+            userService.updateAadharCard(account.getUser().getId(), aadharCard);
             AccountDto createdAccount = accountService.createAccount(account);
             return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -97,6 +114,10 @@ public class AccountController {
         if (effectiveUserId == null) {
             return new ResponseEntity<>("Invalid user session.", HttpStatus.UNAUTHORIZED);
         }
+        String aadharCard = extractAadharFromRequest(account);
+        if (aadharCard == null || aadharCard.isBlank()) {
+            return new ResponseEntity<>("Aadhaar card is required.", HttpStatus.BAD_REQUEST);
+        }
 
         // Enforce requester ownership and pending review status.
         User requester = new User();
@@ -105,6 +126,7 @@ public class AccountController {
         account.setStatus(Account.AccountStatus.PENDING);
 
         try {
+            userService.updateAadharCard(effectiveUserId, aadharCard);
             AccountDto createdAccount = accountService.createAccount(account);
             return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {

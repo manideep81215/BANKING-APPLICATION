@@ -78,7 +78,7 @@ public class AccountService {
         if (user == null) {
             return null;
         }
-        return new UserDto(user.getId(), user.getName(), user.getEmail(), user.getNumber(), user.getRole());
+        return new UserDto(user.getId(), user.getName(), user.getEmail(), user.getAadharCard(), user.getNumber(), user.getRole());
     }
 
     // Helper method to convert Account entity to AccountDto
@@ -105,6 +105,9 @@ public class AccountService {
         Long userId = account.getUser().getId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        if (user.getAadharCard() == null || user.getAadharCard().isBlank()) {
+            throw new IllegalArgumentException("Aadhaar card is required before account creation.");
+        }
         account.setUser(user);
         if (account.getStatus() == null) {
             account.setStatus(Account.AccountStatus.PENDING);

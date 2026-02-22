@@ -41,7 +41,12 @@ export default function CreateAccount() {
   const [step, setStep] = useState(0)
   const [direction, setDirection] = useState(1)
   const [selectedType, setSelectedType] = useState('')
-  const [form, setForm] = useState({ userId: isAdmin ? '' : String(currentUser?.id || ''), balance: '', accountNumber: '' })
+  const [form, setForm] = useState({
+    userId: isAdmin ? '' : String(currentUser?.id || ''),
+    balance: '',
+    accountNumber: '',
+    aadharCard: '',
+  })
   const [users, setUsers] = useState([])
   const [usersLoaded, setUsersLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -76,6 +81,10 @@ export default function CreateAccount() {
         setError('User ID is required.')
         return
       }
+      if (!/^\d{12}$/.test(String(form.aadharCard || '').replace(/\s+/g, ''))) {
+        setError('Aadhaar card must be exactly 12 digits.')
+        return
+      }
       if (!form.balance || isNaN(form.balance) || Number(form.balance) < 0) {
         setError('Enter a valid initial deposit amount.')
         return
@@ -100,7 +109,7 @@ export default function CreateAccount() {
       accountNumber: Number(accNum),
       balance: parseFloat(form.balance),
       status: isAdmin ? 'ACTIVE' : 'PENDING',
-      user: { id: requestUserId },
+      user: { id: requestUserId, aadharCard: String(form.aadharCard || '').replace(/\s+/g, '') },
     }
     try {
       const res = isAdmin ? await createAccount(payload) : await requestAccount(payload)
@@ -238,7 +247,12 @@ export default function CreateAccount() {
                 onClick={() => {
                   setSuccess(null)
                   setStep(0)
-                  setForm({ userId: isAdmin ? '' : String(currentUser?.id || ''), balance: '', accountNumber: '' })
+                  setForm({
+                    userId: isAdmin ? '' : String(currentUser?.id || ''),
+                    balance: '',
+                    accountNumber: '',
+                    aadharCard: '',
+                  })
                   setSelectedType('')
                 }}
               >
@@ -490,6 +504,24 @@ export default function CreateAccount() {
                 </div>
 
                 <div className="form-field">
+                  <label className="field-label">Aadhaar Card Number</label>
+                  <div className="input-icon-wrap">
+                    <i className="fas fa-id-card icon" />
+                    <input
+                      type="text"
+                      className="field-input"
+                      placeholder="12-digit Aadhaar"
+                      value={form.aadharCard}
+                      onChange={(e) => setForm((p) => ({ ...p, aadharCard: e.target.value.replace(/\D/g, '').slice(0, 12) }))}
+                      required
+                      inputMode="numeric"
+                      maxLength={12}
+                    />
+                  </div>
+                </div>
+
+
+                <div className="form-field">
                   <label className="field-label">Initial Deposit (₹)</label>
                   <div className="input-icon-wrap">
                     <i className="fas fa-indian-rupee-sign icon" />
@@ -576,6 +608,10 @@ export default function CreateAccount() {
                       value: users.find((u) => String(u.id) === form.userId)?.name || `User ID: ${form.userId}`,
                     },
                     {
+                      label: 'Aadhaar Card',
+                      value: String(form.aadharCard || '').replace(/(\d{4})(?=\d)/g, '$1 '),
+                    },
+                    {
                       label: 'Opening Balance',
                       value: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(form.balance),
                     },
@@ -643,4 +679,6 @@ export default function CreateAccount() {
     </Layout>
   )
 }
+
+
 

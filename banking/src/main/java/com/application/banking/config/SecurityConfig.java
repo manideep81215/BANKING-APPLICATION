@@ -24,7 +24,7 @@ public class SecurityConfig {
 
     private final List<String> allowedOriginPatterns;
 
-    public SecurityConfig(@Value("${app.cors.allowed-origin-patterns:*}") String allowedOriginPatterns) {
+    public SecurityConfig(@Value("${app.cors.allowed-origin-patterns:http://localhost:5173,http://localhost:5174}") String allowedOriginPatterns) {
         this.allowedOriginPatterns = Arrays.stream(allowedOriginPatterns.split(","))
                 .map(String::trim)
                 .filter(value -> !value.isEmpty())
