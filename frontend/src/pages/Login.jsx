@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { loginUser, registerUser } from '../api/bankingApi'
 import { useToast } from '../components/Toast'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+
 function Login() {
   const navigate = useNavigate()
   const toast = useToast()
@@ -65,7 +67,7 @@ function Login() {
       setError(
         err?.response?.data ||
           (err?.request
-            ? 'Backend not reachable at http://localhost:8080. Start your Spring Boot server.'
+            ? `Backend not reachable at ${API_BASE_URL}. Check VITE_API_BASE_URL and backend status.`
             : 'Login failed. Please check your credentials.'),
       )
     } finally {
@@ -92,7 +94,7 @@ function Login() {
       setError(
         err?.response?.data ||
           (err?.request
-            ? 'Backend not reachable at http://localhost:8080. Start your Spring Boot server.'
+            ? `Backend not reachable at ${API_BASE_URL}. Check VITE_API_BASE_URL and backend status.`
             : 'Registration failed.'),
       )
     } finally {
